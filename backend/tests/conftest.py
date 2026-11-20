@@ -3,8 +3,9 @@ import tempfile
 from pathlib import Path
 
 # Configure before the app is imported: a throwaway database and the offline AI provider.
+# TEST_DATABASE_URL runs the suite against a disposable PostgreSQL database instead (it is wiped on every test).
 _tmp = Path(tempfile.mkdtemp(prefix="smartspend-tests-"))
-os.environ["DATABASE_URL"] = f"sqlite:///{(_tmp / 'test.db').as_posix()}"
+os.environ["DATABASE_URL"] = os.environ.get("TEST_DATABASE_URL") or f"sqlite:///{(_tmp / 'test.db').as_posix()}"
 os.environ["AI_PROVIDER"] = "mock"
 os.environ["ANTHROPIC_API_KEY"] = ""
 os.environ["LOG_LEVEL"] = "WARNING"

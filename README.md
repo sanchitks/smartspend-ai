@@ -8,6 +8,10 @@ Built from the *SmartSpend AI Product Requirements Document v1.0* (20 November 2
 > SmartSpend AI provides general budgeting assistance, not regulated financial advice. It doesn't connect to
 > banks or move money.
 
+**Live:** <https://sanchitks.github.io/smartspend-ai/>. The website is on GitHub Pages, the API on Render
+(<https://smartspend-api-x7e4.onrender.com/docs>) and the data in PostgreSQL on Neon. The free API server
+sleeps when idle, so the first request after a quiet spell can take up to a minute.
+
 ## Quick start (Windows)
 
 ```powershell
@@ -147,11 +151,24 @@ cd backend && .venv/Scripts/python -m pytest
 
 The frontend is type-checked with `npm run typecheck`.
 
-## Database
+To run the same tests on PostgreSQL, point `TEST_DATABASE_URL` at a disposable database; it's wiped on every
+test.
+
+## Database and deployment
 
 Local runs use SQLite and create tables automatically. For PostgreSQL, set `DATABASE_URL` and run
-`alembic upgrade head`. `docker compose up --build` runs the API with PostgreSQL. **The Docker files haven't been
-tested here, because Docker isn't installed on the development machine.**
+`alembic upgrade head`.
+
+How the live version is deployed:
+
+- **Website:** every push to `main` builds the site and publishes it to GitHub Pages
+  (`.github/workflows/pages.yml`). The API address comes from the repository variable `API_URL`.
+- **API:** Render runs the `backend` folder (`render.yaml`) and applies migrations on every start. Secrets
+  (`DATABASE_URL`, `JWT_SECRET_KEY`, `ANTHROPIC_API_KEY`) live only in Render's settings.
+- **Turning on Claude in production:** add `ANTHROPIC_API_KEY` to the Render service's environment.
+
+`docker compose up --build` runs the API with PostgreSQL. **The Docker files haven't been tested, because Docker
+isn't installed on the development machine.**
 
 ## Note for Windows
 
@@ -163,4 +180,3 @@ The project folder name contains `&`, which breaks npm's `.cmd` shortcuts. That'
 - Email verification and password reset.
 - Recurring-transaction suggestions (P2) and email or push notifications (P2).
 - Dark mode, and splitting the frontend bundle (charts load with the main bundle).
-- Hosting: no deployment target has been chosen yet.
