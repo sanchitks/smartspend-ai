@@ -1,0 +1,77 @@
+@import "tailwindcss";
+@import "@fontsource-variable/ibm-plex-sans";
+
+/* SmartSpend design tokens: calm, trustworthy, light. */
+@theme {
+  --font-sans: "IBM Plex Sans Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --color-canvas: #f5f6f4;
+  --color-surface: #ffffff;
+  --color-ink: #13201b;
+  --color-ink-2: #3c4944;
+  --color-muted: #66726d;
+  --color-line: #e2e6e3;
+  --color-line-strong: #cbd3cf;
+
+  --color-brand: #0e6b58;
+  --color-brand-hover: #0b5747;
+  --color-brand-soft: #e2f0eb;
+
+  /* Status: always shown with an icon and a word, never colour alone. */
+  --color-good: #0ca30c;
+  --color-good-ink: #006300;
+  --color-good-soft: #e6f4e6;
+  --color-warning: #fab219;
+  --color-warning-ink: #7a5200;
+  --color-warning-soft: #fdf3dc;
+  --color-serious: #ec835a;
+  --color-serious-ink: #9a3c13;
+  --color-serious-soft: #fdebe3;
+  --color-critical: #d03b3b;
+  --color-critical-ink: #a32424;
+  --color-critical-soft: #fbe9e9;
+
+  /* Chart series (validated pair) and chrome */
+  --color-series-1: #2a78d6;
+  --color-series-2: #eb6834;
+  --color-grid: #e1e0d9;
+  --color-axis: #c3c2b7;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Recharts: recessive chrome */
+.recharts-cartesian-axis-tick-value {
+  fill: var(--color-muted);
+  font-size: 12px;
+}
+.recharts-default-tooltip {
+  border-radius: 8px !important;
+  border-color: var(--color-line) !important;
+  box-shadow: 0 4px 16px rgb(19 32 27 / 0.08);
+}

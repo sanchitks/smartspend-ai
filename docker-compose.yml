@@ -1,0 +1,30 @@
+# Local stack with PostgreSQL. Usage: copy backend/.env.example to backend/.env, set JWT_SECRET_KEY, then
+#   docker compose up --build
+# Website: run the frontend separately (npm run dev) or build it and serve frontend/dist from any static host.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: smartspend
+      POSTGRES_PASSWORD: smartspend
+      POSTGRES_DB: smartspend
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smartspend"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: ./backend
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql+psycopg://smartspend:smartspend@db:5432/smartspend
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
